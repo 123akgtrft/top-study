@@ -12,7 +12,7 @@ struct strbuf {
 void strbuf_init(struct strbuf *sb, size_t alloc);//缓存区初始化
 void strbuf_attach(struct strbuf *sb, void *str, size_t len);//字符串存入缓冲区
 struct strbuf* strbuf_split_buf(const char *str, size_t len, char terminator, int max,int*returnSIze);
-//字符串分割,returnSize表示分割出的个数,max表示最多分出多少个
+//字符串分割,returnSize表示分割出的个数,max表示最多分出多少个(我给结尾加上了\0，否则输出会有异常！！！)
 bool strbuf_is(struct strbuf *sb,char*s);//判断该缓存区是否由指定字符串开头
 char* strbuf_copy_part(struct strbuf*sb,int begin,int end);//拷贝缓冲区一段字符串
 void strbuf_release(struct strbuf *sb);//释放这个缓冲区
