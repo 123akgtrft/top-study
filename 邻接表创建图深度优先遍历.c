@@ -37,6 +37,7 @@ int main(void)
 {
     GraphAdjList G;
     CreateALGraph(&G);
+    printf("邻接表的深度遍历结果是:\n");
     DFSTraverse(G);
     return 0;
 }
