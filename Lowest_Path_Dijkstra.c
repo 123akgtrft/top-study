@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 /*
-Dijkstra算法,求最短路径
+Dijkstra算法,求最短路径(写得我是一把鼻涕一把泪呀)
 */
 #define MAXVEX 9
 #define INFINITY 65535
