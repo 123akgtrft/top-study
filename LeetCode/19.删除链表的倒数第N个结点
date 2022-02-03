@@ -1,0 +1,15 @@
+
+struct ListNode* removeNthFromEnd(struct ListNode* head, int n){
+    struct ListNode*p1=head,*p2=head;
+    int i;
+    for(i=0;i<n;i++)
+    p2=p2->next;
+    if(p2==NULL)//删除头节点
+        return head->next;
+    while(p2->next!=NULL){
+        p2=p2->next;
+        p1=p1->next;
+    }
+    p1->next=p1->next->next;
+    return head;
+}
