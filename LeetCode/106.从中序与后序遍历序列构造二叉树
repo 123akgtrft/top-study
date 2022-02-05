@@ -1,0 +1,15 @@
+
+struct TreeNode* buildTree(int* inorder, int inorderSize, int* postorder, int postorderSize){
+    if(inorderSize==0||postorderSize==0)
+        return NULL;
+    int value=postorder[postorderSize-1],index=0;
+    for(int i=0;i<inorderSize;i++){
+        if(inorder[i]==value)
+        index=i;
+    }
+    struct TreeNode*root=(struct TreeNode*)malloc(sizeof(struct TreeNode));
+    root->val=value;
+    root->left=buildTree(inorder,index,postorder,index);
+    root->right=buildTree(inorder+index+1,inorderSize-index-1,postorder+index,postorderSize-index-1);
+    return root;
+}

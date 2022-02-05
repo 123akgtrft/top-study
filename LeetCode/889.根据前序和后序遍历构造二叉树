@@ -1,0 +1,17 @@
+
+struct TreeNode* constructFromPrePost(int* preorder, int preorderSize, int* postorder, int postorderSize){
+    if(preorderSize==0||postorderSize==0)
+        return NULL;
+    struct TreeNode*root=(struct TreeNode*)malloc(sizeof(struct TreeNode));
+    root->val=preorder[0];
+    // if(preorderSize==1||postorderSize==1)
+    //     return root;
+    int index=-1;
+    for(int i=0;i<postorderSize-1;i++){
+        if(postorder[i]==preorder[1])
+        index=i;
+    }
+    root->left=constructFromPrePost(preorder+1,index+1,postorder,index+1);
+    root->right=constructFromPrePost(preorder+index+2,preorderSize-index-2,postorder+index+1,postorderSize-index-2);
+    return root;
+}
