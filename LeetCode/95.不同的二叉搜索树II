@@ -1,0 +1,34 @@
+struct TreeNode** count(int left,int right,int*returnSize){
+    if(left>right){
+        *returnSize=1;
+        struct TreeNode** ans=malloc(sizeof(struct TreeNode*));
+        ans[0]=NULL;
+        return ans;
+    }
+    struct TreeNode** ans=malloc(0);
+    for(int i=left;i<=right;i++){
+        int leftsize=0,rightsize=0;
+        struct TreeNode**rootleft=count(left,i-1,&leftsize);
+        struct TreeNode**rootright=count(i+1,right,&rightsize);
+        for(int k=0;k<leftsize;k++){
+            for(int j=0;j<rightsize;j++){
+                struct TreeNode*root=(struct TreeNode*)malloc(sizeof(struct TreeNode));
+                root->val=i;
+                root->left=rootleft[k];
+                root->right=rootright[j];
+                (*returnSize)++;
+                ans = realloc(ans, sizeof(struct TreeNode*) * (*returnSize));
+                ans[(*returnSize)-1]=root;
+            }
+        }
+        free(rootleft);
+        free(rootright);
+    }
+    
+    return ans;
+}
+struct TreeNode** generateTrees(int n, int* returnSize){
+    *returnSize=0;
+    
+    return count(1,n,returnSize);
+}

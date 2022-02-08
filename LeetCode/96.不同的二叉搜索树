@@ -1,0 +1,21 @@
+int count(int left,int right,int**num){
+    if(left>right)
+        return 1;
+    if(num[left][right]!=0)
+        return num[left][right];
+    int res=0;
+    for(int i=left;i<=right;i++){
+        res+=count(left,i-1,num)*count(i+1,right,num);
+    }
+    num[left][right]=res;
+    return res;
+}
+int numTrees(int n){
+    int**num=(int**)malloc(sizeof(int*)*(n+1));
+    for(int i=0;i<=n;i++){
+        num[i]=(int*)malloc(sizeof(int)*(n+1));
+        for(int j=0;j<=n;j++)
+        num[i][j]=0;
+    }
+    return count(1,n,num);
+}
