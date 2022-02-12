@@ -1,0 +1,32 @@
+int dair[4][2]={{1,0},{-1,0},{0,1},{0,-1}};
+int dfs(int**grid,int x,int y,int m,int n,int*sign){
+    grid[x][y]=0;
+    int sum=1;
+    if(x==0||x==m-1||y==0||y==n-1){
+        *sign=1;
+    }
+    for(int i=0;i<4;i++){
+        int mx=x+dair[i][0],my=y+dair[i][1];
+        if(mx>=0&&mx<m&&my>=0&&my<n&&grid[mx][my]==1){
+            if(mx==0||mx==m-1||my==0||my==n-1){
+                *sign=1;
+            }
+            sum+=dfs(grid,mx,my,m,n,sign);
+        }
+    }
+    return sum;
+}
+int numEnclaves(int** grid, int gridSize, int* gridColSize){
+    int i,j,sum=0,sign=0,m=gridSize,n=*gridColSize;
+    for(i=0;i<m;i++){
+        for(j=0;j<n;j++){
+            sign=0;
+            if(grid[i][j]==1){
+                int k=dfs(grid,i,j,m,n,&sign);
+                if(sign==0)
+                    sum+=k;
+            }
+        }
+    }
+    return sum;
+}
