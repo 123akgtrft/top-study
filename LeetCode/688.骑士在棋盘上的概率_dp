@@ -1,0 +1,22 @@
+int dair[8][2]={{-2,1},{-2,-1},{-1,2},{-1,-2},{1,2},{1,-2},{2,-1},{2,1}};
+double knightProbability(int n, int k, int row, int column){
+    double memo[101][25][25];
+    memset(memo,0,sizeof(memo));
+    int count,i,j;
+    for(count=0;count<=k;count++){
+        for(i=0;i<n;i++){
+            for(j=0;j<n;j++){
+                if(count==0){
+                    memo[0][i][j]=1;
+                    continue;
+                }
+                for(int c=0;c<8;c++){
+                    int x=i+dair[c][0],y=j+dair[c][1];
+                    if(x>=0&&x<n&&y>=0&&y<n)
+                        memo[count][i][j]+=memo[count-1][x][y]/8;
+                }
+            }
+        }
+    }
+    return memo[k][row][column];
+}

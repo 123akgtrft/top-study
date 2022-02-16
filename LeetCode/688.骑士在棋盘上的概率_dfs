@@ -1,0 +1,21 @@
+int dair[8][2]={{-2,1},{-2,-1},{-1,2},{-1,-2},{1,2},{1,-2},{2,-1},{2,1}};
+double memo[101][25][25];
+double figure(int x,int y,int n,int count,int k){//k为限制步数，count为真实步数
+    if(count==k)
+        return 1;
+    if(memo[count][x][y]!=0)
+        return memo[count][x][y];
+    double pro=0;
+    for(int i=0;i<8;i++){
+        int mx=x+dair[i][0],my=y+dair[i][1];
+        if(mx>=0&&mx<n&&my>=0&&my<n){
+            pro+=figure(mx,my,n,count+1,k);
+        }
+    }
+    memo[count][x][y]=pro/8;
+    return pro/8;
+}
+double knightProbability(int n, int k, int row, int column){
+    memset(memo,0,sizeof(memo));
+    return figure(row,column,n,0,k);
+}
