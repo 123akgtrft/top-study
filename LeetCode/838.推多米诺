@@ -1,0 +1,44 @@
+class Solution {
+    public String pushDominoes(String dominoes) {
+        int len=dominoes.length();
+        if(len <= 1) return dominoes;
+        char[] dom=dominoes.toCharArray();
+        int l=0,r=1;
+        while(l<r){
+            while(r<len&&dom[r]=='.')
+                r++;
+            if(r>=len)
+                break;
+            if(dom[l]=='.'||dom[l]=='L'){
+                if(dom[r]=='L'){
+                    while(l<r){
+                        dom[l++]='L';
+                    }
+                }
+                else if(dom[r]=='R'){
+                    l=r;
+                }
+            }
+            else if(dom[l]=='R'){
+                if(dom[r]=='R'){
+                    while(l<r)
+                        dom[l++]='R';
+                }
+                else if(dom[r]=='L'){
+                    int i=l+1,j=r-1;
+                    while(i<j){
+                        dom[i++]='R';
+                        dom[j--]='L';
+                    }
+                    l=r;
+                }
+            }
+            r++;
+        }
+        if(l<len&&dom[l]=='R'){
+            while(l<len)
+                dom[l++]='R';
+        }
+        return new String(dom);
+    }
+}
