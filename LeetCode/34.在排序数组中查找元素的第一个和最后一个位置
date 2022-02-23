@@ -1,0 +1,23 @@
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int left=binary(nums,target,true);
+        int right=binary(nums,target,false)-1;
+        if(left>=0&&left<=right&&right<nums.length){
+            return new int[]{left,right};
+        }
+        return new int[]{-1,-1};
+    }
+    public int binary(int[] nums,int target,boolean lower){
+        int left=0,right=nums.length-1,ans=nums.length;
+        while(left<=right){
+            int mid=(left+right)/2;
+            if((nums[mid]>=target&&lower)||nums[mid]>target){
+                ans=mid;
+                right=mid-1;
+            }else{
+                left=mid+1;
+            }
+        }
+        return ans;
+    }
+}
