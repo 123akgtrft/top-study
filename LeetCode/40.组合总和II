@@ -1,0 +1,36 @@
+class Solution {
+    List<List<Integer>> ans=new ArrayList<List<Integer>>();
+    List<Integer> combine=new ArrayList<Integer>();
+    List<int[]> freq=new ArrayList<int[]>();
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        for(int num : candidates){
+            int size=freq.size();
+            if(freq.isEmpty()||num!=freq.get(size-1)[0]){
+                freq.add(new int[]{num,1});
+            }else{
+                ++freq.get(size-1)[1];
+            }
+        }
+        dfs(target,0);
+        return ans;
+    }
+    public void dfs(int target,int index){
+        
+        if(target==0){
+            ans.add(new ArrayList<Integer>(combine));
+            return;
+        }
+        if(index==freq.size()||target<freq.get(index)[0])return;
+        
+        dfs(target,index+1);
+        int most=Math.min(target/freq.get(index)[0],freq.get(index)[1]);
+        for(int i=1;i<=most;i++){
+            combine.add(freq.get(index)[0]);
+            dfs(target-i*freq.get(index)[0],index+1);
+        }
+        for(int i=1;i<=most;i++){
+            combine.remove(combine.size()-1);
+        }
+    }
+}
