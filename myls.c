@@ -157,7 +157,7 @@ void ls_do(const char*path,int mode){
         free(path_full);
         count++;
     }
-    if(mode & PARAM_L)printf("总用量 %d\n",total);
+   // if(mode & PARAM_L)printf("总用量 %d\n",total);
 
     if(mode & PARAM_U)qsort(file_name,count,sizeof(file_name[0]),cmp1);
     else qsort(file_name,count,sizeof(file_name[0]),cmp);
