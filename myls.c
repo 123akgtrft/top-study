@@ -56,6 +56,7 @@ int cmpt(const void*a,const void*b){
     char**a1=(char**)a;
     char**b1=(char**)b;
     struct stat sta;
+    
     time_t t1,t2;
     stat(*a1,&sta);
     t1=sta.st_mtime;
