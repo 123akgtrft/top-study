@@ -31,7 +31,7 @@ int main(int argc,char**argv)
     int i=1,mode=get_param(argc,argv);
     char*path=(char*)malloc(sizeof(char)*MAX);
     strcpy(path,"");
-    if(argc==1||*(argv+1)[0]=='-'){//"ls"
+    if(argc==1){//"ls"
         ls_do(".",mode);
     }else{
         for(i=1;i<argc;i++){
