@@ -21,7 +21,7 @@
 #define MAX 128
 
 int cmp(const void*,const void*);
-int cmp1(const void*,const void*);
+//int cmp1(const void*,const void*);
 int get_param(int argc, char *argv[]);
 void ls_do(const char*,int);
 void display_l(struct stat*,const char*);// -l
@@ -52,11 +52,11 @@ int cmp(const void*a,const void*b){
     char**b1=(char**)b;
     return strcmp(*a1,*b1);
 }
-int cmp1(const void*a,const void*b){
-    char**a1=(char**)a;
-    char**b1=(char**)b;
-    return -1*strcmp(*a1,*b1);
-}
+// int cmp1(const void*a,const void*b){
+//     char**a1=(char**)a;
+//     char**b1=(char**)b;
+//     return -1*strcmp(*a1,*b1);
+// }
 int cmpt(const void*a,const void*b){
     char**a1=(char**)a;
     char**b1=(char**)b;
@@ -195,12 +195,11 @@ void ls_do(const char*path,int mode){
         free(path_full);
         count++;
     }
-
-    if(mode & PARAM_r)qsort(file_name,count,sizeof(file_name[0]),cmp1);
-    else if(mode & PARAM_T)qsort(file_name,count,sizeof(file_name[0]),cmpt);
-    else qsort(file_name,count,sizeof(file_name[0]),cmp);
-
-    for(int i=0;i<count;i++){
+    if(mode & PARAM_T)qsort(file_name,count,sizeof(file_name[0]),cmpt);
+    //if(mode & PARAM_r)qsort(file_name,count,sizeof(file_name[0]),cmp1);
+    if(!(mode & PARAM_T)) qsort(file_name,count,sizeof(file_name[0]),cmp);
+    int i;
+    for((mode & PARAM_r)?(i=count-1):(i=0);(mode & PARAM_r)?(i>=0):(i<count);(mode & PARAM_r)?(i--):(i++)){
         char*path_full=(char*)malloc(sizeof(char)*MAX);
         if(!strcmp(path,"/"))sprintf(path_full,"/%s",file_name[i]);
         else sprintf(path_full,"%s/%s",path,file_name[i]);
