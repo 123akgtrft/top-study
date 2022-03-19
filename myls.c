@@ -34,10 +34,15 @@ int main(int argc,char**argv)
     if(argc==1){//"ls"
         ls_do(".",mode);
     }else{
+        int sign=1;
         for(i=1;i<argc;i++){
             if(argv[i][0]=='-')continue;
-            else ls_do(argv[i],mode);
+            else{
+                sign=0;
+                ls_do(argv[i],mode);
+            }
         }
+        if(sign)ls_do(".",mode);
     }
     free(path);
     return 0;
