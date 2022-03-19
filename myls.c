@@ -172,7 +172,7 @@ void ls_do(const char*path,int mode){
     struct stat sta;
     int total,ls_count=0;
     char ls_r[MAX][MAX];
-    char**file_name=(char**)malloc(sizeof(char*)*MAX*MAX*MAX);
+    char**file_name=(char**)malloc(sizeof(char*)*MAX*MAX);
     int count=0;
     //printf("\n%s\n",path);
     if((dir_fd=opendir(path))==NULL){
@@ -180,7 +180,7 @@ void ls_do(const char*path,int mode){
     }
     while((dir=readdir(dir_fd))!=NULL){
         if((dir->d_name)[0]=='.'&&(mode&PARAM_A)==0)continue;
-        if(count==MAX*MAX*MAX)file_name=(char**)realloc(file_name,sizeof(char*)*MAX*MAX*MAX*MAX);
+        if(count==MAX*MAX)file_name=(char**)realloc(file_name,sizeof(char*)*MAX*MAX*MAX);
         file_name[count]=malloc(sizeof(char)*MAX);
         strcpy(file_name[count],dir->d_name);
         char*path_full=(char*)malloc(sizeof(char)*MAX);
