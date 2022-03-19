@@ -172,7 +172,7 @@ void ls_do(const char*path,int mode){
     struct stat sta;
     int total,ls_count=0;
     char ls_r[MAX][MAX];
-    char**file_name=(char**)malloc(sizeof(char*)*MAX*MAX);
+    char**file_name=(char**)malloc(sizeof(char*)*MAX*MAX*MAX);
     int count=0;
     //printf("\n%s\n",path);
     if((dir_fd=opendir(path))==NULL){
@@ -180,10 +180,7 @@ void ls_do(const char*path,int mode){
     }
     while((dir=readdir(dir_fd))!=NULL){
         if((dir->d_name)[0]=='.'&&(mode&PARAM_A)==0)continue;
-        // if((count%MAX==0)&&count){
-        //     if(file_name=(char**)realloc(file_name,sizeof(char*)*(count/MAX+1)*MAX))
-        //         display_err("realloc",__LINE__);
-        // }
+        if(count==MAX*MAX*MAX)file_name=(char**)realloc(file_name,sizeof(char*)*MAX*MAX*MAX*MAX);
         file_name[count]=malloc(sizeof(char)*MAX);
         strcpy(file_name[count],dir->d_name);
         char*path_full=(char*)malloc(sizeof(char)*MAX);
@@ -203,9 +200,7 @@ void ls_do(const char*path,int mode){
         char*path_full=(char*)malloc(sizeof(char)*MAX);
         if(!strcmp(path,"/"))sprintf(path_full,"/%s",file_name[i]);
         else sprintf(path_full,"%s/%s",path,file_name[i]);
-        //printf("\n%s\n",path_full);
-        if(stat(path_full,&sta)==-1){
-            printf("\n\n%s\n\n",path_full);
+        if(lstat(path_full,&sta)==-1){
             display_err(path,__LINE__);
         }
 
