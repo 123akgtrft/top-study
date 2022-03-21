@@ -171,19 +171,24 @@ void ls_do(const char*path,int mode){
     struct dirent*dir;
     struct stat sta;
     int total,ls_count=0;
-    char ls_r[MAX][MAX];
-    char**file_name=(char**)malloc(sizeof(char*)*MAX*MAX);
+    char**ls_r=(char**)malloc(sizeof(char*)*MAX*MAX*MAX);
+    char**file_name=(char**)malloc(sizeof(char*)*MAX*MAX*MAX);
     int count=0;
-    //printf("\n%s\n",path);
+
     if((dir_fd=opendir(path))==NULL){
-        display_err("opendir",__LINE__);
+        fprintf(stderr, "line: %d ",__LINE__);
+        perror("opendir");
+        free(ls_r);
+        free(file_name);
+        return;
+        //display_err("opendir",__LINE__);
     }
     while((dir=readdir(dir_fd))!=NULL){
         if((dir->d_name)[0]=='.'&&(mode&PARAM_A)==0)continue;
-        if(count==MAX*MAX)file_name=(char**)realloc(file_name,sizeof(char*)*MAX*MAX*MAX);
-        file_name[count]=malloc(sizeof(char)*MAX);
+        //if(count==MAX*MAX)file_name=(char**)realloc(file_name,sizeof(char*)*MAX*MAX*MAX);
+        file_name[count]=malloc(sizeof(char)*MAX*MAX);
         strcpy(file_name[count],dir->d_name);
-        char*path_full=(char*)malloc(sizeof(char)*MAX);
+        char*path_full=(char*)malloc(sizeof(char)*MAX*MAX);
         //if(!strcmp(path[strlen(path)-1],"/"))
 
         if(!strcmp(path,"/"))sprintf(path_full,"/%s",file_name[count]);
@@ -197,18 +202,23 @@ void ls_do(const char*path,int mode){
     if(!(mode & PARAM_T)) qsort(file_name,count,sizeof(file_name[0]),cmp);
     int i;
     for((mode & PARAM_r)?(i=count-1):(i=0);(mode & PARAM_r)?(i>=0):(i<count);(mode & PARAM_r)?(i--):(i++)){
-        char*path_full=(char*)malloc(sizeof(char)*MAX);
+        char*path_full=(char*)malloc(sizeof(char)*MAX*MAX);
         if(!strcmp(path,"/"))sprintf(path_full,"/%s",file_name[i]);
         else sprintf(path_full,"%s/%s",path,file_name[i]);
         if(lstat(path_full,&sta)==-1){
-            display_err(path,__LINE__);
+            //display_err(path,__LINE__);
+            fprintf(stderr, "line: %d ",__LINE__);
+            perror("opendir");
+            free(path_full);
+            free(file_name[i]);
+            free(ls_r);
+            free(file_name);
+            return;
         }
 
-        
-        
+
         if(mode & PARAM_L)display_l(&sta,file_name[i]);
-        // if(mode & PARAM_NONE)
-        //     printf("%s  ",file_name[i]);
+
         if(!(mode & PARAM_L)&&(mode & PARAM_I))printf("%ld ",sta.st_ino);
         if((mode & PARAM_I)&&(count%7==0))printf("\n");
 
@@ -216,18 +226,21 @@ void ls_do(const char*path,int mode){
         if(!(mode & PARAM_L))printf("%s  ",file_name[i]);
 
         if((mode & PARAM_R)&&!(S_ISLNK(sta.st_mode))&&S_ISDIR(sta.st_mode)&&(file_name[i][0]!='.')){
-            //printf("\n%s:\n",path_full);
+            ls_r[ls_count]=(char*)malloc(sizeof(char)*MAX*MAX);
             strcpy(ls_r[ls_count++],path_full);
             //ls_do(path_full,mode);
         }
-        //free(file_name[i]);
+        free(file_name[i]);
         free(path_full);
     }printf("\n");
     for(int i=0;i<ls_count;i++){
         printf("\n%s:\n",ls_r[i]);
         ls_do(ls_r[i],mode);
-    }ls_count=0;
+        free(ls_r[i]);
+    }
+    ls_count=0;
     if(!(mode & PARAM_L))printf("\b\b");
+    free(ls_r);
     free(file_name);
     closedir(dir_fd);
     dir_fd=NULL;
