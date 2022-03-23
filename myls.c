@@ -154,8 +154,8 @@ void display_l(struct stat*sta,const char*name){
         printf("x");
     }else printf("-");
 
-    printf("%2ld",sta->st_nlink);
-    printf("%4s",getpwuid(sta->st_uid)->pw_name);
+    printf("%2ld ",sta->st_nlink);
+    printf("%4s ",getpwuid(sta->st_uid)->pw_name);
     printf("%4s",getgrgid(sta->st_gid)->gr_name);
     printf("%6ld",sta->st_size);
 
@@ -225,7 +225,7 @@ void ls_do(const char*path,int mode){
         if(!(mode & PARAM_L)&&(mode & PARAM_S))printf("%ld ",sta.st_size?((sta.st_size/1024-1)/4+1)*4:0);
         if(!(mode & PARAM_L))printf("%s  ",file_name[i]);
 
-        if((mode & PARAM_R)&&!(S_ISLNK(sta.st_mode))&&S_ISDIR(sta.st_mode)&&(file_name[i][0]!='.')){
+        if((mode & PARAM_R)&&!(S_ISLNK(sta.st_mode))&&S_ISDIR(sta.st_mode)&&(strcmp(file_name[i],".")*strcmp(file_name[i],".."))){
             ls_r[ls_count]=(char*)malloc(sizeof(char)*MAX*MAX);
             strcpy(ls_r[ls_count++],path_full);
             //ls_do(path_full,mode);
