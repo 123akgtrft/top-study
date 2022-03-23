@@ -21,7 +21,7 @@
 #define MAX 128
 
 int cmp(const void*,const void*);
-//int cmp1(const void*,const void*);
+int cmpt(const void*a,const void*b);
 int get_param(int argc, char *argv[]);
 void ls_do(const char*,int);
 void display_l(struct stat*,const char*);// -l
@@ -52,11 +52,6 @@ int cmp(const void*a,const void*b){
     char**b1=(char**)b;
     return strcmp(*a1,*b1);
 }
-// int cmp1(const void*a,const void*b){
-//     char**a1=(char**)a;
-//     char**b1=(char**)b;
-//     return -1*strcmp(*a1,*b1);
-// }
 int cmpt(const void*a,const void*b){
     char**a1=(char**)a;
     char**b1=(char**)b;
@@ -185,22 +180,15 @@ void ls_do(const char*path,int mode){
     }
     while((dir=readdir(dir_fd))!=NULL){
         if((dir->d_name)[0]=='.'&&(mode&PARAM_A)==0)continue;
-        //if(count==MAX*MAX)file_name=(char**)realloc(file_name,sizeof(char*)*MAX*MAX*MAX);
         file_name[count]=malloc(sizeof(char)*MAX*MAX);
         strcpy(file_name[count],dir->d_name);
-        char*path_full=(char*)malloc(sizeof(char)*MAX*MAX);
-        //if(!strcmp(path[strlen(path)-1],"/"))
-
-        if(!strcmp(path,"/"))sprintf(path_full,"/%s",file_name[count]);
-        else sprintf(path_full,"%s/%s",path,file_name[count]);
-
-        free(path_full);
         count++;
     }
+
     if(mode & PARAM_T)qsort(file_name,count,sizeof(file_name[0]),cmpt);
-    //if(mode & PARAM_r)qsort(file_name,count,sizeof(file_name[0]),cmp1);
     if(!(mode & PARAM_T)) qsort(file_name,count,sizeof(file_name[0]),cmp);
     int i;
+
     for((mode & PARAM_r)?(i=count-1):(i=0);(mode & PARAM_r)?(i>=0):(i<count);(mode & PARAM_r)?(i--):(i++)){
         char*path_full=(char*)malloc(sizeof(char)*MAX*MAX);
         if(!strcmp(path,"/"))sprintf(path_full,"/%s",file_name[i]);
@@ -216,7 +204,6 @@ void ls_do(const char*path,int mode){
             return;
         }
 
-
         if(mode & PARAM_L)display_l(&sta,file_name[i]);
 
         if(!(mode & PARAM_L)&&(mode & PARAM_I))printf("%ld ",sta.st_ino);
@@ -228,7 +215,6 @@ void ls_do(const char*path,int mode){
         if((mode & PARAM_R)&&!(S_ISLNK(sta.st_mode))&&S_ISDIR(sta.st_mode)&&(strcmp(file_name[i],".")*strcmp(file_name[i],".."))){
             ls_r[ls_count]=(char*)malloc(sizeof(char)*MAX*MAX);
             strcpy(ls_r[ls_count++],path_full);
-            //ls_do(path_full,mode);
         }
         free(file_name[i]);
         free(path_full);
