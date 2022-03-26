@@ -159,7 +159,10 @@ void display_l(struct stat*sta,const char*name){
     strcpy(time,ctime(&sta->st_mtime));//is mtime not atime
     time[strlen(time)-1]='\0';
     printf(" %.12s",time+4);
-    printf(" %s\n",name);
+    if(S_ISLNK(mode_file))printf("\033[36m %s\033[0m\n",name);
+    else if(S_ISDIR(mode_file))printf("\033[34m %s\033[0m\n",name);
+    else printf(" %s\n",name);
+
 }
 void ls_do(const char*path,int mode){
     DIR*dir_fd;
@@ -178,6 +181,7 @@ void ls_do(const char*path,int mode){
         return;
         //display_err("opendir",__LINE__);
     }
+    printf("\033[33m%s:\033[0m\n",path);
     while((dir=readdir(dir_fd))!=NULL){
         if((dir->d_name)[0]=='.'&&(mode&PARAM_A)==0)continue;
         file_name[count]=malloc(sizeof(char)*MAX*MAX);
@@ -204,13 +208,17 @@ void ls_do(const char*path,int mode){
             return;
         }
 
+        if(mode & PARAM_I)printf("%ld ",sta.st_ino);
+
+        if(mode & PARAM_S)printf("%2ld ",sta.st_size?((sta.st_size/1024-1)/4+1)*4:0);
         if(mode & PARAM_L)display_l(&sta,file_name[i]);
 
-        if(!(mode & PARAM_L)&&(mode & PARAM_I))printf("%ld ",sta.st_ino);
-        if((mode & PARAM_I)&&(count%7==0))printf("\n");
-
-        if(!(mode & PARAM_L)&&(mode & PARAM_S))printf("%ld ",sta.st_size?((sta.st_size/1024-1)/4+1)*4:0);
-        if(!(mode & PARAM_L))printf("%s  ",file_name[i]);
+        mode_t mode_file=sta.st_mode;
+        if(!(mode & PARAM_L)){
+            if(S_ISLNK(mode_file))printf("\033[36m%s  \033[0m",file_name[i]);
+            else if(S_ISDIR(mode_file))printf("\033[34m%s  \033[0m",file_name[i]);
+            else printf("%s  ",file_name[i]);
+        }
 
         if((mode & PARAM_R)&&!(S_ISLNK(sta.st_mode))&&S_ISDIR(sta.st_mode)&&(strcmp(file_name[i],".")*strcmp(file_name[i],".."))){
             ls_r[ls_count]=(char*)malloc(sizeof(char)*MAX*MAX);
@@ -220,7 +228,7 @@ void ls_do(const char*path,int mode){
         free(path_full);
     }printf("\n");
     for(int i=0;i<ls_count;i++){
-        printf("\n%s:\n",ls_r[i]);
+        printf("\n\033[33m%s:\033[0m\n",ls_r[i]);
         ls_do(ls_r[i],mode);
         free(ls_r[i]);
     }
