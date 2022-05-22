@@ -1,0 +1,19 @@
+class Solution {
+    int[] f=new int[1<<20]; 
+    public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
+        if ((1 + maxChoosableInteger) * (maxChoosableInteger) / 2 < desiredTotal) {
+            return false;
+        }
+        if(desiredTotal==0)return true;
+        return dfs(maxChoosableInteger, desiredTotal,0,0)==1;
+    }
+    public int dfs(int m,int d,int status,int sum){
+        if(f[status]!=0)return f[status];//这个状态已经经历过
+        for(int i=0;i<m;i++){
+            if(((status>>i)&1)==1)continue;
+            if(sum+i+1>=d)return f[status]=1;
+            if(dfs(m,d,status|(1<<i),sum+i+1)==-1)return f[status]=1;
+        }
+        return f[status]=-1;
+    }
+}
