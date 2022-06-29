@@ -477,7 +477,6 @@ void piexec(char **cmd, int *p, int pipesize)
                     }
                     close(fd[0]);
                     close(fd[1]);
-                    printf("here\n");
                     execvp(cmd[start], cmd + start);
                 }
                 else
