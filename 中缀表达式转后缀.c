@@ -50,17 +50,16 @@ int main(void)
     char c,e;
     SqStack s;
     initStack(&s);
-    printf("请输入中缀表达式 输入#表示结束\n");
 	scanf("%c", &c);
     while(c!='#')
     {
-        while(c>='0'&&c<='9')
+        while(c>='a'&&c<='z')
         {
             printf("%c",c);//output 1-number
             scanf("%c",&c);
             if(c<'0'||c>'9')
             {
-                printf(" ");
+                printf("");
             }
         }
         if(c==')')
